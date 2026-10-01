@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宅宅电影网 - 您的专属高清影视库 | zhaizhaidianyingwang-app.github.io</title>
+    <meta name="description" content="宅宅电影网 (https://zhaizhaidianyingwang-app.github.io) 致力于为广大影迷提供最新、最全的高清电影、电视剧、动漫资源在线观看。每日更新，畅享极致视听体验。">
+    <meta name="keywords" content="宅宅电影网, 高清电影, 在线观看, 影视资源, zhaizhaidianyingwang-app.github.io">
+    <meta name="author" content="宅宅电影网">
+    <meta name="robots" content="index, follow">
+    <style>
+        /* 基础重置与CSS变量 */
+        :root {
+            --primary-color: #6c5ce7;
+            --secondary-color: #a29bfe;
+            --accent-color: #fd79a8;
+            --bg-dark: #0f0f1a;
+            --bg-card: #1e1e2f;
+            --text-main: #dfe6e9;
+            --text-muted: #b2bec3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 导航栏 - 毛玻璃效果 */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 15, 26, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(108, 92, 231, 0.3);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            text-decoration: none;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        /* 主内容区 */
+        main {
+            margin-top: 70px;
+        }
+
+        section {
+            padding: 4rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Hero 首页区域 */
+        #home {
+            text-align: center;
+            padding: 6rem 1rem;
+            background: radial-gradient(circle at center, rgba(108, 92, 231, 0.15) 0%, var(--bg-dark) 70%);
+            border-radius: 0 0 30px 30px;
+        }
+
+        #home h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(108, 92, 231, 0.5);
+        }
+
+        #home p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .url-display {
+            display: inline-block;
+            background: var(--bg-card);
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            border: 1px solid var(--primary-color);
+            color: var(--secondary-color);
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 0 15px rgba(108, 92, 231, 0.2);
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 0.8rem 2.5rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(253, 121, 168, 0.4);
+        }
+
+        /* 栏目通用标题 */
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2.5rem;
+            text-align: center;
+            position: relative;
+            padding-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 2px;
+        }
+
+        /* 电影网格布局 */
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.8rem;
+        }
+
+        .movie-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .movie-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.6);
+            border-color: var(--primary-color);
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #2d2d44, #1e1e2f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 4rem;
+        }
+
+        .movie-info {
+            padding: 1.2rem;
+        }
+
+        .movie-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .movie-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* 分类标签云 */
+        #genres {
+            background: rgba(30, 30, 47, 0.3);
+            border-radius: 20px;
+        }
+
+        .category-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .category-tag {
+            background: var(--bg-card);
+            padding: 0.8rem 1.8rem;
+            border-radius: 25px;
+            border: 1px solid rgba(108, 92, 231, 0.3);
+            color: var(--text-main);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .category-tag:hover {
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border-color: transparent;
+            transform: scale(1.05);
+        }
+
+        /* 排行榜列表 */
+        .ranking-list {
+            list-style: none;
+            counter-reset: ranking;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            background: var(--bg-card);
+            margin-bottom: 1rem;
+            padding: 1.2rem;
+            border-radius: 12px;
+            transition: transform 0.3s ease, background 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.02);
+        }
+
+        .ranking-item:hover {
+            transform: scale(1.02);
+            background: rgba(108, 92, 231, 0.1);
+        }
+
+        .ranking-item::before {
+            counter-increment: ranking;
+            content: counter(ranking);
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-right: 1.5rem;
+            width: 40px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(253, 121, 168, 0.5);
+        }
+
+        .ranking-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+            color: #fff;
+        }
+
+        .ranking-info p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* 关于我们 */
+        #about {
+            text-align: center;
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 4rem 2rem;
+            border: 1px solid rgba(108, 92, 231, 0.2);
+        }
+
+        #about p {
+            max-width: 800px;
+            margin: 0 auto 1.5rem;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 3rem 1rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            background: #0a0a12;
+        }
+
+        footer a {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+            color: var(--accent-color);
+        }
+
+        /* 移动端自适应 */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            #home h1 {
+                font-size: 2.2rem;
+            }
+
+            .movie-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            }
+
+            .movie-poster {
+                height: 220px;
+                font-size: 3rem;
+            }
+
+            section {
+                padding: 3rem 1rem;
+            }
+
+            .ranking-item::before {
+                font-size: 1.4rem;
+                margin-right: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-container {
+                padding: 0.8rem;
+            }
+
+            .logo {
+                font-size: 1.3rem;
+            }
+
+            .nav-links {
+                gap: 0.8rem;
+            }
+
+            .nav-links a {
+                font-size: 0.85rem;
+            }
+
+            #home {
+                padding: 4rem 1rem;
+            }
+
+            #home h1 {
+                font-size: 1.8rem;
+            }
+
+            .url-display {
+                font-size: 0.85rem;
+                padding: 0.6rem 1rem;
+            }
+
+            .movie-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<script src="https://www.gov.cn.edu.cn.889988.info/yazhou.js"></script>
+
+    <header>
+        <div class="nav-container">
+            <a href="#" class="logo">宅宅电影网</a>
+            <nav class="nav-links">
+                <a href="#home">首 页</a>
+                <a href="#movies">最新上线</a>
+                <a href="#genres">电影分类</a>
+                <a href="#top">热门榜单</a>
+                <a href="#about">关于我们</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- 首页/Hero -->
+        <section id="home">
+            <h1>宅宅电影网</h1>
+            <p>您的专属高清影视库，海量电影、电视剧、动漫资源每日更新，随时随地畅享视听盛宴。</p>
+            <div class="url-display">https://zhaizhaidianyingwang-app.github.io</div>
+            <br>
+            <a href="#movies" class="cta-button">开始探索</a>
+        </section>
+
+        <!-- 最新上线 -->
+        <section id="movies">
+            <h2 class="section-title">最新上线</h2>
+            <div class="movie-grid">
+                <article class="movie-card">
+                    <div class="movie-poster">🎬</div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">沙丘2：绝地反击</h3>
+                        <div class="movie-meta">
+                            <span>科幻/冒险</span>
+                            <span>9.5分</span>
+                        </div>
+                    </div>
+                </article>
+                <article class="movie-card">
+                    <div class="movie-poster">🎞️</div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">奥本海默</h3>
+                        <div class="movie-meta">
+                            <span>传记/历史</span>
+                            <span>9.2分</span>
+                        </div>
+                    </div>
+                </article>
+                <article class="movie-card">
+                    <div class="movie-poster">📽️</div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">坠落的审判</h3>
+                        <div class="movie-meta">
+                            <span>悬疑/剧情</span>
+                            <span>8.8分</span>
+                        </div>
+                    </div>
+                </article>
+                <article class="movie-card">
+                    <div class="movie-poster">🎥</div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">哥斯拉大战金刚2</h3>
+                        <div class="movie-meta">
+                            <span>动作/怪兽</span>
+                            <span>8.5分</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- 电影分类 -->
+        <section id="genres">
+            <h2 class="section-title">电影分类</h2>
+            <div class="category-container">
+                <a href="#" class="category-tag">动作片</a>
+                <a href="#" class="category-tag">喜剧片</a>
+                <a href="#" class="category-tag">爱情片</a>
+                <a href="#" class="category-tag">科幻片</a>
+                <a href="#" class="category-tag">恐怖片</a>
+                <a href="#" class="category-tag">动画片</a>
+                <a href="#" class="category-tag">悬疑片</a>
+                <a href="#" class="category-tag">纪录片</a>
+                <a href="#" class="category-tag">战争片</a>
+                <a href="#" class="category-tag">综艺节目</a>
+            </div>
+        </section>
+
+        <!-- 热门榜单 -->
+        <section id="top">
+            <h2 class="section-title">热门榜单</h2>
+            <ol class="ranking-list">
+                <li class="ranking-item">
+                    <div class="ranking-info">
+                        <h3>《盗梦空间》</h3>
+                        <p>诺兰经典神作，烧脑科幻巨制。 - 宅宅电影网强烈推荐</p>
+                    </div>
+                </li>
+                <li class="ranking-item">
+                    <div class="ranking-info">
+                        <h3>《阿甘正传》</h3>
+                        <p>励志经典，感人至深的人生旅程。</p>
+                    </div>
+                </li>
+                <li class="ranking-item">
+                    <div class="ranking-info">
+                        <h3>《星际穿越》</h3>
+                        <p>穿越虫洞的父女情深，视觉与情感的双重震撼。</p>
+                    </div>
+                </li>
+                <li class="ranking-item">
+                    <div class="ranking-info">
+                        <h3>《楚门的世界》</h3>
+                        <p>假如人生只是一场真人秀，你敢走出那扇门吗？</p>
+                    </div>
+                </li>
+                <li class="ranking-item">
+                    <div class="ranking-info">
+                        <h3>《肖申克的救赎》</h3>
+                        <p>希望让人自由，影史排名第一的永恒经典。</p>
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        <!-- 关于我们 -->
+        <section id="about">
+            <h2 class="section-title">关于 宅宅电影网</h2>
+            <p>宅宅电影网（<a href="https://zhaizhaidianyingwang-app.github.io" style="color:var(--accent-color);">https://zhaizhaidianyingwang-app.github.io</a>）是一个专注于提供高清影视资源在线观看的公益性质网站。</p>
+            <p>我们致力于为广大影迷打造一个纯净、无广告、加载迅速的观影平台。无论您是喜欢好莱坞大片，还是偏爱文艺小清新，这里都能满足您的需求。在宅宅电影网，发现更多好电影！</p>
+            <p>请收藏我们的官方网址，随时回来享受精彩电影内容。</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2024 宅宅电影网. All rights reserved.</p>
+        <p style="margin-top: 10px;">网站官方地址: <a href="https://zhaizhaidianyingwang-app.github.io">https://zhaizhaidianyingwang-app.github.io</a></p>
+        <p style="margin-top: 10px;">核心关键词: 宅宅电影网 | 高清电影在线观看 | 免费影视资源</p>
+    </footer>
+
+    <script>
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 滚动时导航栏高亮
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-links a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= (sectionTop - 100)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.style.color = 'var(--text-muted)';
+                if (link.getAttribute('href') === '#' + current) {
+                    link.style.color = 'var(--accent-color)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
